@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# MediaPipe model
+models/
+
+# OpenCV / misc
+*.log
+.DS_Store
+Thumbs.db
