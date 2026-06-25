@@ -63,7 +63,7 @@ python -m venv venv
 pip install opencv-python opencv-contrib-python mediapipe vgamepad
 ```
 
-5. Make sure the model file exists at `models/hand_landmarker.task`.
+5. Get it from the [MediaPipe Models page](https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker#models) and place the `.task` file inside the `models/` folder.
 
 6. If `vgamepad` does not work, install the ViGEm Bus driver and then restart your machine if needed.
 
