@@ -98,40 +98,34 @@ When the app starts, you should see:
 
 ### Live Throttle Tuning
 
-The `Throttle Controls` window contains two sliders:
+The `Throttle Controls` window contains three sliders:
 
 - `min_y`: adjustable from `-0.10` to `0.10`
 - `max_y`: adjustable from `0.65` to `0.85`
+- `deadzone`: adjustable from `0.0` to `0.1`
 
 Default values:
 
 - `min_y = 0.02`
 - `max_y = 0.75`
+- `deadzone = 0.05`
 
 The camera window also shows:
 
 - `min_y`
 - `max_y`
-- `raw_y`
 - `throttle`
 
-Use `raw_y` to see what your hand is producing, then adjust `min_y` and `max_y` until throttle responds the way you want.
 
 ## Notes
 
-- The webcam index is currently set to `2` in `main.py`. If your camera does not open, try changing:
-
-```python
-cap = cv2.VideoCapture(2)
-```
-
-to:
+- The webcam index is currently set to `0` in `main.py`. If your camera does not open, try changing:
 
 ```python
 cap = cv2.VideoCapture(0)
 ```
 
-or `1` depending on your system.
+to `1` depending on your system.
 
 - The video feed is mirrored on purpose, which is why the code swaps MediaPipe's detected left/right labels before applying controls.
 
@@ -158,10 +152,5 @@ or `1` depending on your system.
 
 ### Throttle stays at 0
 
-- Watch the `raw_y` value in the camera window
 - Adjust `min_y` lower or `max_y` lower if your hand never reaches the expected range
-- If needed, inspect the right-hand mapping code in `main.py`
 
-## Main File
-
-The main application logic lives in [main.py](/C:/Users/bilal/Desktop/hand%20Controller/main.py).
