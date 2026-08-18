@@ -1,0 +1,6 @@
+customtkinter
+mediapipe
+numpy
+opencv-python
+PyQt5
+vgamepad

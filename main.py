@@ -7,10 +7,10 @@ from hud import draw_skeleton, draw_finger_ids, draw_hand_label, draw_steering_i
 from gamepad import steeringControl, throttleControl, press_a, release_a
 from steering import calculate_steering
 from throttle import calculate_throttle
+from gui import sliderRendering, get_slider_value, process_gui, close_gui
 
 latest_result = None
 last_timestamp_ms = -1
-CONTROL_WINDOW = "Throttle Controls"
 show_camera = True
 
 BaseOptions = mp.tasks.BaseOptions
@@ -19,13 +19,9 @@ HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
 VisionRunningMode = mp.tasks.vision.RunningMode
 
 
-
-def _noop(_value):
-    pass
-
-
-def trackbar_to_float(window_name, trackbar_name):
-    return cv2.getTrackbarPos(trackbar_name, window_name) / 1000.0
+sliderRendering("min_y", "Min Y", 0.20, 0.00, 0.30)
+sliderRendering("max_y", "Max Y", 0.38, 0.20, 0.85)
+sliderRendering("deadzone", "Deadzone", 0.07, 0.00, 0.20)
 
 # debug output
 def print_result(result, output_image, timestamp_ms):
@@ -52,18 +48,12 @@ cap = cv2.VideoCapture(1)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
 
-cv2.namedWindow(CONTROL_WINDOW)
-# Default slider values:
-# min_y starts at 0.02
-# max_y starts at 0.75
-cv2.createTrackbar("min_y", CONTROL_WINDOW, 200, 300, _noop)
-cv2.createTrackbar("max_y", CONTROL_WINDOW, 380, 850, _noop)
-cv2.createTrackbar("deadzone", CONTROL_WINDOW, 70, 200, _noop)
-
 smoothed_throttle = 0
 try:
     # while loop
     while True:
+        process_gui()
+
         ret, frame = cap.read()
         if not ret:
             break
@@ -105,7 +95,7 @@ try:
                 # Use the swapped label because the webcam feed is mirrored.
                 if hand_label == "Left":
                     # ============ LEFT HAND ==============
-                    deadzone = trackbar_to_float(CONTROL_WINDOW, "deadzone")
+                    deadzone = get_slider_value("deadzone")
                     steering = calculate_steering(wrist, middle_knuckle, deadzone)
 
                     draw_steering_info(overlay_layer, steering)
@@ -120,8 +110,8 @@ try:
                     thumb_tip = hand[4]
                     thumb_knuckle = hand[2]
 
-                    min_y = trackbar_to_float(CONTROL_WINDOW, "min_y") - 0.10
-                    max_y = trackbar_to_float(CONTROL_WINDOW, "max_y")
+                    min_y = get_slider_value("min_y") - 0.10
+                    max_y = get_slider_value("max_y")
 
                     if min_y >= max_y:
                         max_y = min(min_y + 0.01, 0.85)
@@ -155,4 +145,5 @@ try:
 finally:
     cap.release()
     cv2.destroyAllWindows()
+    close_gui()
     detector.close()
